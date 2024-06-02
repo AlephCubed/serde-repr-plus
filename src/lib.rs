@@ -87,36 +87,9 @@ pub fn derive_deserialize(input: TokenStream) -> TokenStream {
     let declare_discriminants = input.variants.iter().map(|variant| {
         let variant = &variant.ident;
         quote! {
-            const #variant: #repr = #ident::#variant as #repr;
+            (#ident::#variant as #repr, #ident::#variant),
         }
     });
-
-    let match_discriminants = input.variants.iter().map(|variant| {
-        let variant = &variant.ident;
-        quote! {
-            discriminant::#variant => ::core::result::Result::Ok(#ident::#variant),
-        }
-    });
-
-    let error_format = match input.variants.len() {
-        1 => "invalid value: {}, expected {}".to_owned(),
-        2 => "invalid value: {}, expected {} or {}".to_owned(),
-        n => "invalid value: {}, expected one of: {}".to_owned() + &", {}".repeat(n - 1),
-    };
-
-    let other_arm = match input.default_variant {
-        Some(variant) => {
-            let variant = &variant.ident;
-            quote! {
-                ::core::result::Result::Ok(#ident::#variant)
-            }
-        }
-        None => quote! {
-            ::core::result::Result::Err(serde::de::Error::custom(
-                format_args!(#error_format, other #(, discriminant::#variants)*)
-            ))
-        },
-    };
 
     TokenStream::from(quote! {
         #[allow(deprecated)]
@@ -126,18 +99,23 @@ pub fn derive_deserialize(input: TokenStream) -> TokenStream {
             where
                 D: serde::Deserializer<'de>,
             {
-                #[allow(non_camel_case_types)]
-                struct discriminant;
-
-                #[allow(non_upper_case_globals)]
-                impl discriminant {
+                let values = [
                     #(#declare_discriminants)*
+                ];
+
+                let mut output = values.first().unwrap();
+
+                for value in &values {
+                    if #repr::abs_diff(value.0, target) < output.0 {
+                        output = value;
+                    }
+
+                    if output.0 == 0 {
+                        break;
+                    }
                 }
 
-                match <#repr as serde::Deserialize>::deserialize(deserializer)? {
-                    #(#match_discriminants)*
-                    other => #other_arm,
-                }
+                Ok(output.1.clone())
             }
         }
     })

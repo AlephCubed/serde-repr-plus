@@ -10,7 +10,7 @@ use serde_repr_plus::{Deserialize_repr_clamp, Serialize_repr_clamp};
 mod small_prime {
     use super::*;
 
-    #[derive(Serialize_repr_clamp, Deserialize_repr_clamp, PartialEq, Debug)]
+    #[derive(Serialize_repr_clamp, Deserialize_repr_clamp, PartialEq, Debug, Clone)]
     #[repr(u8)]
     enum SmallPrime {
         Two = 2,
@@ -35,7 +35,7 @@ mod small_prime {
 mod other {
     use super::*;
 
-    #[derive(Serialize_repr_clamp, Deserialize_repr_clamp, PartialEq, Debug)]
+    #[derive(Serialize_repr_clamp, Deserialize_repr_clamp, PartialEq, Debug, Clone)]
     #[repr(u8)]
     enum TestOther {
         A,
@@ -58,7 +58,7 @@ mod other {
 mod implicit_discriminant {
     use super::*;
 
-    #[derive(Serialize_repr_clamp, Deserialize_repr_clamp, PartialEq, Debug)]
+    #[derive(Serialize_repr_clamp, Deserialize_repr_clamp, PartialEq, Debug, Clone)]
     #[repr(u8)]
     enum ImplicitDiscriminant {
         Zero,

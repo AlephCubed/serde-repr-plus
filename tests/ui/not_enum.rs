@@ -1,6 +1,6 @@
-use serde_repr::Serialize_repr;
+use serde_repr_plus::Serialize_repr_clamp;
 
-#[derive(Serialize_repr)]
+#[derive(Serialize_repr_clamp)]
 struct SmallPrime {
     two: u8,
     three: u8,

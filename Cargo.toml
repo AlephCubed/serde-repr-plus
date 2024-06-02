@@ -1,5 +1,5 @@
 [package]
-name = "serde_repr"
+name = "serde_repr_plus"
 version = "0.1.19"
 authors = ["David Tolnay <dtolnay@gmail.com>"]
 categories = ["encoding", "no-std", "no-std::no-alloc"]

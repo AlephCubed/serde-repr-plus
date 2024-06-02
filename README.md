@@ -1,4 +1,4 @@
-Serde repr derive
+Serde repr derive plus
 =================
 
 [<img alt="github" src="https://img.shields.io/badge/github-dtolnay/serde--repr-8da0cb?style=for-the-badge&labelColor=555555&logo=github" height="20">](https://github.com/dtolnay/serde-repr)

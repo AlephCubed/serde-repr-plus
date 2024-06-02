@@ -1,4 +1,4 @@
-error: unsupported repr for serde_repr enum
+error: unsupported repr for serde_repr_plus enum
  --> tests/ui/repr_c.rs:4:8
   |
 4 | #[repr(C)]

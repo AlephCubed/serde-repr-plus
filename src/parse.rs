@@ -69,7 +69,7 @@ impl Parse for Input {
                     })
                 }
                 Fields::Named(_) | Fields::Unnamed(_) => {
-                    Err(Error::new(variant.ident.span(), "must be a unit variant to use serde_repr derive"))
+                    Err(Error::new(variant.ident.span(), "must be a unit variant to use serde_repr_plus derive"))
                 }
             })
             .collect::<Result<Vec<Variant>>>()?;
@@ -104,7 +104,7 @@ impl Parse for Input {
                             }
                             return Ok(());
                         }
-                        Err(meta.error("unsupported repr for serde_repr enum"))
+                        Err(meta.error("unsupported repr for serde_repr_plus enum"))
                     })?;
                 }
             }

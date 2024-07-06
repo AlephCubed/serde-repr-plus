@@ -14,7 +14,7 @@
 //! ```
 //! use serde_repr_plus::{Serialize_repr_clamp, Deserialize_repr_clamp};
 //!
-//! #[derive(Serialize_repr_clamp, Deserialize_repr_clamp, PartialEq, Debug)]
+//! #[derive(Serialize_repr_clamp, Deserialize_repr_clamp, PartialEq, Debug, Clone, Copy)]
 //! #[repr(u8)]
 //! enum SmallPrime {
 //!     Two = 2,
@@ -84,8 +84,17 @@ pub fn derive_deserialize(input: TokenStream) -> TokenStream {
     let repr = input.repr;
     let variants = input.variants.iter().map(|variant| &variant.ident);
 
+    let mut first: Option<proc_macro2::TokenStream> = None;
+
     let declare_discriminants = input.variants.iter().map(|variant| {
         let variant = &variant.ident;
+
+        if first.is_none() {
+            first = Some(quote! {
+                #ident::#variant
+            })
+        }
+
         quote! {
             (#ident::#variant as #repr, #ident::#variant),
         }
@@ -103,12 +112,12 @@ pub fn derive_deserialize(input: TokenStream) -> TokenStream {
                     #(#declare_discriminants)*
                 ];
 
-                let mut output = values.first().unwrap();
+                let mut output = (#repr::MAX, #first);
                 let target = #repr::deserialize(deserializer).unwrap();
 
                 for value in &values {
                     if #repr::abs_diff(value.0, target) < output.0 {
-                        output = value;
+                        output = (#repr::abs_diff(value.0, target), value.1);
                     }
 
                     if output.0 == 0 {

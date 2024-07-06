@@ -2,6 +2,7 @@ use proc_macro2::{Span, TokenStream, TokenTree};
 use syn::parse::{Error, Parse, ParseStream, Result};
 use syn::{parenthesized, token, Attribute, Data, DeriveInput, Expr, Fields, Ident, Meta, Token};
 
+#[allow(dead_code)]
 pub struct Input {
     pub ident: Ident,
     pub repr: Ident,

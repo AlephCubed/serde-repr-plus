@@ -82,7 +82,6 @@ pub fn derive_deserialize(input: TokenStream) -> TokenStream {
     let input = parse_macro_input!(input as Input);
     let ident = input.ident;
     let repr = input.repr;
-    let variants = input.variants.iter().map(|variant| &variant.ident);
 
     let mut first: Option<proc_macro2::TokenStream> = None;
 

@@ -79,3 +79,39 @@ mod implicit_discriminant {
         assert_eq!(p, ImplicitDiscriminant::Two);
     }
 }
+
+mod clamped_value {
+    use super::*;
+
+    #[derive(Serialize_repr_clamp, Deserialize_repr_clamp, PartialEq, Debug, Clone, Copy)]
+    #[repr(u8)]
+    enum Clamped {
+        Zero = 0,
+        Three = 3,
+        Six = 6,
+    }
+
+    #[test]
+    fn test_deserialize() {
+        let p: Clamped = serde_json::from_str("2").unwrap();
+        assert_eq!(p, Clamped::Three);
+    }
+}
+
+mod i8_value {
+    use super::*;
+
+    #[derive(Serialize_repr_clamp, Deserialize_repr_clamp, PartialEq, Debug, Clone, Copy)]
+    #[repr(i8)]
+    enum Clamped {
+        Zero = 0,
+        Three = -3,
+        Six = 6,
+    }
+
+    #[test]
+    fn test_deserialize() {
+        let p: Clamped = serde_json::from_str("2").unwrap();
+        assert_eq!(p, Clamped::Zero);
+    }
+}

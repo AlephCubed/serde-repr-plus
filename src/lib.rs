@@ -116,8 +116,8 @@ pub fn derive_deserialize(input: TokenStream) -> TokenStream {
                 let target = #repr::deserialize(deserializer).unwrap();
 
                 for value in &values {
-                    if #repr::abs_diff(value.0, target) < output.0 {
-                        output = (#repr::abs_diff(value.0, target), value.1);
+                    if (#repr::abs_diff(value.0, target) as #repr) < output.0 {
+                        output = (#repr::abs_diff(value.0, target) as #repr, value.1);
                     }
 
                     if output.0 == 0 {
